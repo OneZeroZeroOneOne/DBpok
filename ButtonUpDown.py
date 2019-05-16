@@ -8,13 +8,21 @@ def ButtnUPDOWN(IdPokemon):
     cursor = conn.cursor()
     markup = InlineKeyboardMarkup()
     weeklist = list()
+    if IdPokemon < 1:
+        IdPokemon = 1
     for i in range(0,6,1):
         sample = cursor.execute("SELECT * FROM PokemonDB WHERE PokemonID = {}".format(str(IdPokemon+i)))
         sample = cursor.fetchone()
-        weeklist.append(InlineKeyboardButton("{}".format(sample[2]), callback_data = "ID:"+sample[1]))
-    markup.row(*weeklist)
-    inline_Nazas = InlineKeyboardButton("Назад", callback_data='UP')
-    inline_Vpered = InlineKeyboardButton("Вперед", callback_data='DOWN')
+        inl_but = InlineKeyboardButton("{}".format(sample[2]), callback_data = "ID/"+str(sample[1]))
+        markup.add(inl_but)
+    inline_Nazad = InlineKeyboardButton("Назад", callback_data='DOWN/'+str(sample[1]))
+    inline_Vpered = InlineKeyboardButton("Вперед", callback_data='UP/'+str(sample[1]))
     markup.add(inline_Nazad,inline_Vpered)
-    return sample[2]
+    print(str(sample[1]))
+    return markup
+    
+
+
+if __name__ == '__main__':
+    k = ButtnUPDOWN(1)
     

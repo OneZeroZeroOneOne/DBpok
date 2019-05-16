@@ -35,19 +35,24 @@ async def process_pokemon_command(message: types.Message):
 
 @dp.message_handler(commands=['pokemons'])
 async def process_pokemons_command(message: types.Message):
-    conn = sqlite3.connect("{}".format(settings.poke_db))
-    cursor = conn.cursor()
-    sample = cursor.execute("SELECT * FROM PokemonDB WHERE PokemonID = '{}'".format(1))
-    sample = cursor.fetchone()
-    print(ButtonUpDown.ButtnUPDOWN(int(sample[1])))
-    #murkup = ButtnUPDOWN(int(sample[1]))
-    #await call.message.reply("Pokemon list")
-    
+    argument = message.get_args()
+    arg2 = ''.join(argument)
+    print(arg2)
+    if arg2.isdigit():
+        markup = ButtonUpDown.ButtnUPDOWN(int(arg2))
+        await message.reply("Pokemon list",reply_markup = markup)
+        
         
 
 
-#@dp.callback_query_handler()
-#async def query_proceed(call: types.CallbackQuery):
+@dp.callback_query_handler()
+async def query_InPok_proceed(call: types.CallbackQuery):
+    mascalldata = call.data.split('/')
+    print(mascalldata[0],mascalldata[1],"ssssssssssssssss") 
+    #if call.data == 'UP:{}'.format(mascalldata[1]):
+    markup = ButtonUpDown.ButtnUPDOWN(int(mascalldata[1])-11)
+    await call.message.edit_text("Pokemon list", reply_markup = markup)   
+        
 
 if __name__ == "__main__":
     executor.start_polling(dp)
