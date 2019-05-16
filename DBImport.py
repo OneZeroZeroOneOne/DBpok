@@ -1,9 +1,10 @@
 import sqlite3
- 
+import settings
+
 def main():
-    conn = sqlite3.connect("PokemonDB.db")
+    conn = sqlite3.connect(settings.poke_db)
     cursor = conn.cursor()
-    imp = open('Pokemon.csv', 'r')
+    imp = open(settings.poke_csv, 'r')
     t = 0
     for i in imp:
         if t > 0:
