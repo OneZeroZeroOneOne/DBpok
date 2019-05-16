@@ -1,6 +1,7 @@
 token = "858185563:AAEIh49GYHAEGb_1PK4K2VQuFftBto5zEpU"
 import sqlite3
 import settings
+import ButtonUpDown
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -17,7 +18,7 @@ dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
 @dp.message_handler(commands=['pokemon'])
-async def process_start_command(message: types.Message):
+async def process_pokemon_command(message: types.Message):
     argument = message.get_args()
     if argument[0].isdigit():
         conn = sqlite3.connect("{}".format(settings.poke_db))
@@ -31,6 +32,22 @@ async def process_start_command(message: types.Message):
         await bot.send_photo(chat_id = message.chat.id, \
         photo = types.InputFile("pokemons_img\{}#{}.jpg".format(sample[1],sample[2].lower()))\
         , caption = strng, parse_mode = 'Markdown')
+
+@dp.message_handler(commands=['pokemons'])
+async def process_pokemons_command(message: types.Message):
+    conn = sqlite3.connect("{}".format(settings.poke_db))
+    cursor = conn.cursor()
+    sample = cursor.execute("SELECT * FROM PokemonDB WHERE PokemonID = '{}'".format(1))
+    sample = cursor.fetchone()
+    print(ButtonUpDown.ButtnUPDOWN(int(sample[1])))
+    #murkup = ButtnUPDOWN(int(sample[1]))
+    #await call.message.reply("Pokemon list")
+    
+        
+
+
+#@dp.callback_query_handler()
+#async def query_proceed(call: types.CallbackQuery):
 
 if __name__ == "__main__":
     executor.start_polling(dp)
