@@ -1,4 +1,5 @@
 import requests
+import sqlite3
 from bs4 import BeautifulSoup
 
 
@@ -6,7 +7,7 @@ url = "https://pokemondb.net/pokedex/national"
 url_domain = "https://pokemondb.net"
 where_to_save = "pokemons_img"
 
-def get_pokemons_page(url):
+def get_pokemons_page(url = url):
     r = requests.get(url)
     soup = BeautifulSoup(r.text, 'html.parser')
     pokemon_list = soup.find_all('div', {"class":"infocard-list infocard-list-pkmn-lg"})
@@ -43,7 +44,72 @@ def get_pokemon_images(url):
             for chunk in r.iter_content(1024):
                 f.write(chunk)
 
+def get_parent(n, who, l):
+    cur = l[n-1]
+    return cur if cur<who else -1
 
-pokemon_list = get_pokemons_page(url)
+def get_child(n, who, l):
+    if n+1<len(l):
+        return l[n+1]
+    return -1
+
+def get_neigh(who, l):
+    for n, i in enumerate(l):
+        if i == who:
+            return [get_parent(n, who, l), get_child(n, who, l)]
+
+def validate(l):
+    if l[0]+1 == l[1]:
+        return False
+    return True
+
+def get_pokemon_evolution(url):
+    conn = sqlite3.connect("PokemonDB.sqlite") # или :memory: чтобы сохранить в RAM
+    cursor = conn.cursor()
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    specie_id = soup.find("table", {"class":"vitals-table"}).find('tbody').find_all('tr')[0]
+    specie_id = int(specie_id.find('td').text)
+
+    evo_list = soup.find("div", {"class":"infocard-list-evo"})
+    if evo_list is not None:
+        evo_list = evo_list.find_all("div", {"class", "infocard"})
+        evo_list = [int(i.find('span', {"class":"infocard-lg-data text-muted"}).find('small').text.replace("#", "")) for i in evo_list]
+        #for i in evo_list:
+        #    cur_id =
+        #    print(int(cur_id))
+        neigh = get_neigh(specie_id, evo_list)
+        if neigh:
+            isvalid = validate(neigh)
+            print(neigh, isvalid)
+            if isvalid:
+                try:
+                    cursor.execute("INSERT INTO Evolution (ID, FromID, ToID) VALUES({}, {}, {})".format(specie_id, neigh[0], neigh[1]))
+                except:
+                    pass
+            else:
+                try:
+                    cursor.execute("INSERT INTO Evolution (ID, FromID, ToID) VALUES({}, {}, {})".format(specie_id, -1, -1))
+                except:
+                    pass
+        else:
+            try:
+                cursor.execute("INSERT INTO Evolution (ID, FromID, ToID) VALUES({}, {}, {})".format(specie_id, -1, -1))
+            except:
+                pass
+    else:
+        print("no evolutions with ", specie_id)
+        try:
+            cursor.execute("INSERT INTO Evolution (ID, FromID, ToID) VALUES({}, {}, {})".format(specie_id, -1, -1))
+        except:
+            pass
+    conn.commit()
+
+pokemon_list = get_pokemons_page(url = url)
 for i in pokemon_list:
-    get_pokemon_images(i)
+    get_pokemon_evolution(i)
+#get_pokemon_evolution(pokemon_list[19])
+#print(get_neigh(2, [1, 2, 3]))
+#for i in pokemon_list:
+#    get_pokemon_images(i)
