@@ -55,6 +55,6 @@ class Pokemon(Model):
         return None
 
     def GetPrevEvolution(self):
-        if self.EvolutionInto != -1:
+        if self.EvolutionFrom != -1:
             return Pokemon(self.EvolutionFrom, self.db)
         return None
