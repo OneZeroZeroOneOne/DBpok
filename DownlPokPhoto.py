@@ -49,9 +49,10 @@ async def process_pokemons_command(message: types.Message):
 async def query_InPok_proceed(call: types.CallbackQuery):
     mascalldata = call.data.split('/')
     print(mascalldata[0],mascalldata[1],"ssssssssssssssss") 
-    #if call.data == 'UP:{}'.format(mascalldata[1]):
-    markup = ButtonUpDown.ButtnUPDOWN(int(mascalldata[1])-11)
-    await call.message.edit_text("Pokemon list", reply_markup = markup)   
+    if call.data == 'NAZ/:{}'.format(mascalldata[1]):
+        markup = ButtonUpDown.ButtnUPDOWN(int(mascalldata[1])-11)
+        await call.message.edit_text("Pokemon list", reply_markup = markup)   
+    elif call.data == 'NEXT/:{}'.format(mascalldata[1]):
         
 
 if __name__ == "__main__":
