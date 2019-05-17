@@ -2,6 +2,20 @@ from schematics.models import Model
 from schematics.types import StringType, DecimalType, BooleanType
 import os
 
+pokemon_description = """*Имя покемона:* {}
+*В общем:* {}
+*Атака:* {}
+*HP:* {}
+*Защита:* {}
+*Тип1:* {}
+*Тип2:* {}
+*Ск.Атк:* {}
+*Cк.Защ:* {}
+*Скорость:* {}
+*Поколение:* {}
+*Легендарность:* {}
+
+*ID:* {}"""
 
 class Pokemon(Model):
     ID = DecimalType(required=True)
@@ -58,3 +72,10 @@ class Pokemon(Model):
         if self.EvolutionFrom != -1:
             return Pokemon(self.EvolutionFrom, self.db)
         return None
+
+    def ToString(self):
+        return pokemon_description.format(self.Name, '123', self.Attack,
+        self.HP, self.Defense, self.TP,
+        self.TPP, self.SpAtk, self.SpDef,
+        self.Speed,
+        self.Generation, self.Legendary, self.ID)
