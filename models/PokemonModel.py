@@ -32,8 +32,12 @@ class Pokemon(Model):
 
     def GetImage(self):
         self.Image = "pokemons_img/{}#{}.jpg".format(self.ID, self.Name.replace("``", "").lower())
+
+    def validate(self):
+        super(Pokemon, self).validate()
         exists = os.path.isfile(self.Image)
-        #print(exists)
+        if not exists:
+            raise Exception("Image of Pokemon with ID {} doesnt exist :(".format(self.ID))
 
 
     def GetEvolutions(self):
