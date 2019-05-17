@@ -1,5 +1,8 @@
 from models.PokemonModel import Pokemon
+from DBworker import DB
 
+db = DB()
 
-p = Pokemon([1, 83, "Farfetch`d", "t1", "t2", 100, 100, 100, 100, 100, 100, True])
+p = Pokemon(1, db)
 p.validate()
+print(p.TP, p.TPP)

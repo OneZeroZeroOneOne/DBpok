@@ -41,18 +41,18 @@ async def process_pokemons_command(message: types.Message):
     if arg2.isdigit():
         markup = ButtonUpDown.ButtnUPDOWN(int(arg2))
         await message.reply("Pokemon list",reply_markup = markup)
-        
-        
+
+
 
 
 @dp.callback_query_handler()
 async def query_InPok_proceed(call: types.CallbackQuery):
     mascalldata = call.data.split('/')
-    print(mascalldata[0],mascalldata[1],"ssssssssssssssss") 
+    print(mascalldata[0],mascalldata[1],"ssssssssssssssss")
     #if call.data == 'UP:{}'.format(mascalldata[1]):
     markup = ButtonUpDown.ButtnUPDOWN(int(mascalldata[1])-11)
-    await call.message.edit_text("Pokemon list", reply_markup = markup)   
-        
+    await call.message.edit_text("Pokemon list", reply_markup = markup)
+
 
 if __name__ == "__main__":
     executor.start_polling(dp)
