@@ -35,15 +35,26 @@ class Pokemon(Model):
         self.GetEvolutions()
 
     def GetImage(self):
-        self.Image = "pokemons_img/{}#{}.jpg".format(self.ID, self.Name.replace("`", "").lower())
+        self.Image = "pokemons_img/{}#{}.jpg".format(self.PokemonID, self.Name.replace("`", "").lower())
+        #print(self.Image)
 
     def validate(self):
         super(Pokemon, self).validate()
         exists = os.path.isfile(self.Image)
         if not exists:
-            raise Exception("Image of Pokemon with ID {} doesnt exist :(".format(self.ID))
-        print(self.items())
+            raise Exception("Image of Pokemon with ID {} doesnt exist :(".format(self.PokemonID))
+        #print(self.items())
 
 
     def GetEvolutions(self):
         self.EvolutionFrom, self.EvolutionInto = self.db.get_evolutions_by_id(self.ID)
+
+    def GetNextEvolution(self):
+        if self.EvolutionInto != -1:
+            return Pokemon(self.EvolutionInto, self.db)
+        return None
+
+    def GetPrevEvolution(self):
+        if self.EvolutionInto != -1:
+            return Pokemon(self.EvolutionFrom, self.db)
+        return None

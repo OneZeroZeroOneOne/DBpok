@@ -3,6 +3,7 @@ from DBworker import DB
 
 db = DB()
 
-p = Pokemon(1, db)
+p = Pokemon(5, db)
 p.validate()
-print(p.TP, p.TPP)
+next_evolution_pokemon = p.GetNextEvolution()
+next_evolution_pokemon.validate()
