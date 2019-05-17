@@ -1,5 +1,5 @@
 import settings
-import DataBaseModule
+import DBworker
 from aiogram.types import ReplyKeyboardRemove, \
 ReplyKeyboardMarkup, InlineKeyboardMarkup, \
 InlineKeyboardButton
@@ -8,11 +8,13 @@ def ButtnUPDOWN(IdPokemon):
     weeklist = list()
     if IdPokemon < 1:
         IdPokemon = 1
+    if IdPokemon > 715:
+        IdPokemon = 715
     for i in range(0,6,1):
-        inl_but = InlineKeyboardButton("{}".format(DataBaseModule.Sample(IdPokemon,i)[2]), callback_data = "ID/"+str(DataBaseModule.Sample(IdPokemon,i)[1]))
+        inl_but = InlineKeyboardButton("{}".format(DBworker.DB.Sample(IdPokemon,i)[2]), callback_data = "ID/"+str(DBworker.DB.Sample(IdPokemon,i)[1]))
         markup.add(inl_but)
-    inline_Nazad = InlineKeyboardButton("Назад", callback_data='NAZ/'+str(sample[1]))
-    inline_Vpered = InlineKeyboardButton("Вперед", callback_data='NEXT/'+str(sample[1]))
+    inline_Nazad = InlineKeyboardButton("Назад", callback_data='NAZ/'+str(DBworker.DB.Sample(IdPokemon,i)[1]))
+    inline_Vpered = InlineKeyboardButton("Вперед", callback_data='NEXT/'+str(DBworker.DB.Sample(IdPokemon,i)[1]))
     markup.add(inline_Nazad,inline_Vpered)
     return markup
     

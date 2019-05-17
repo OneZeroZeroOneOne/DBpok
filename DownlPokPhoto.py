@@ -2,6 +2,7 @@ token = "858185563:AAEIh49GYHAEGb_1PK4K2VQuFftBto5zEpU"
 import sqlite3
 import settings
 import ButtonUpDown
+import DBworker
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from aiogram.utils import executor
@@ -20,26 +21,22 @@ dp.middleware.setup(LoggingMiddleware())
 @dp.message_handler(commands=['pokemon'])
 async def process_pokemon_command(message: types.Message):
     argument = message.get_args()
-    if argument[0].isdigit():
-        conn = sqlite3.connect("{}".format(settings.poke_db))
-        cursor = conn.cursor()
-        sample = cursor.execute("SELECT * FROM PokemonDB WHERE PokemonID = '{}'".format(argument))
-        sample = cursor.fetchone()
+    print(argument)
+    if argument.isdigit():
         strng = "*Имя покемона:* {}\n*В общем:* {}\n*Атака:* {}\n*HP:* {}\n*Защита:* {}\n*Тип1:* {}\n*Тип2:* {}\n*Ск.Атк:* {}\n"\
-        "*Cк.Защ:* {}\n*Скорость:* {}\n*Поколение:* {}\n*Легендарность:* {}\n*ID:* {}".format(sample[2],sample[5],sample[7],sample[6],\
-        sample[8],sample[3],sample[4],sample[9],sample[10],sample[11],sample[12],sample[13],sample[1])
-        print(*sample)
+        "*Cк.Защ:* {}\n*Скорость:* {}\n*Поколение:* {}\n*Легендарность:* {}\n*ID:* {}".format(DBworker.DB.Sample(argument,0)[2],DBworker.DB.Sample(argument,0)[5],DBworker.DB.Sample(argument,0)[7],DBworker.DB.Sample(argument,0)[6],\
+        DBworker.DB.Sample(argument,0)[8],DBworker.DB.Sample(argument,0)[3],DBworker.DB.Sample(argument,0)[4],DBworker.DB.Sample(argument,0)[9],DBworker.DB.Sample(argument,0)[10],DBworker.DB.Sample(argument,0)[11],DBworker.DB.Sample(argument,0)[12],DBworker.DB.Sample(argument,0)[13],DBworker.DB.Sample(argument,0)[1])
+        print(strng)
         await bot.send_photo(chat_id = message.chat.id, \
-        photo = types.InputFile("pokemons_img\{}#{}.jpg".format(sample[1],sample[2].lower()))\
+        photo = types.InputFile("pokemons_img\{}#{}.jpg".format(DBworker.DB.Sample(argument,0)[1],DBworker.DB.Sample(argument,0)[2].lower()))\
         , caption = strng, parse_mode = 'Markdown')
 
 @dp.message_handler(commands=['pokemons'])
 async def process_pokemons_command(message: types.Message):
     argument = message.get_args()
-    arg2 = ''.join(argument)
-    print(arg2)
-    if arg2.isdigit():
-        markup = ButtonUpDown.ButtnUPDOWN(int(arg2))
+    print(argument)
+    if argument.isdigit():
+        markup = ButtonUpDown.ButtnUPDOWN(int(argument))
         await message.reply("Pokemon list",reply_markup = markup)
         
         
@@ -47,12 +44,23 @@ async def process_pokemons_command(message: types.Message):
 
 @dp.callback_query_handler()
 async def query_InPok_proceed(call: types.CallbackQuery):
-    mascalldata = call.data.split('/')
-    print(mascalldata[0],mascalldata[1],"ssssssssssssssss") 
-    if call.data == 'NAZ/:{}'.format(mascalldata[1]):
-        markup = ButtonUpDown.ButtnUPDOWN(int(mascalldata[1])-11)
+    strcalldata = call.data.split('/')
+    argument = strcalldata[1]
+    print(strcalldata[0],strcalldata[1],"ssssssssssssssss") 
+    if strcalldata[0] == 'NAZ':
+        markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-11)
         await call.message.edit_text("Pokemon list", reply_markup = markup)   
-    elif call.data == 'NEXT/:{}'.format(mascalldata[1]):
+    elif strcalldata[0] == 'NEXT':
+        markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])+6)
+        await call.message.edit_text("Pokemon list", reply_markup = markup)
+    else:
+        strng = "*Имя покемона:* {}\n*В общем:* {}\n*Атака:* {}\n*HP:* {}\n*Защита:* {}\n*Тип1:* {}\n*Тип2:* {}\n*Ск.Атк:* {}\n"\
+        "*Cк.Защ:* {}\n*Скорость:* {}\n*Поколение:* {}\n*Легендарность:* {}\n*ID:* {}".format(DBworker.DB.Sample(argument,0)[2],DBworker.DB.Sample(argument,0)[5],DBworker.DB.Sample(argument,0)[7],DBworker.DB.Sample(argument,0)[6],\
+        DBworker.DB.Sample(argument,0)[8],DBworker.DB.Sample(argument,0)[3],DBworker.DB.Sample(argument,0)[4],DBworker.DB.Sample(argument,0)[9],DBworker.DB.Sample(argument,0)[10],DBworker.DB.Sample(argument,0)[11],DBworker.DB.Sample(argument,0)[12],DBworker.DB.Sample(argument,0)[13],DBworker.DB.Sample(argument,0)[1])
+        print(strng)
+        await bot.send_photo(chat_id = call.from_user.id, \
+        photo = types.InputFile("pokemons_img\{}#{}.jpg".format(DBworker.DB.Sample(argument,0)[1],DBworker.DB.Sample(argument,0)[2].lower()))\
+        , caption = strng, parse_mode = 'Markdown')
         
 
 if __name__ == "__main__":
