@@ -44,32 +44,32 @@ async def process_pokemons_command(message: types.Message):
     if argument.isdigit():
         markup = ButtonUpDown.ButtnUPDOWN(int(argument))
         await message.reply("Pokemon list",reply_markup = markup)
-        
-        
+
+
 
 
 @dp.callback_query_handler()
 async def query_InPok_proceed(call: types.CallbackQuery):
     strcalldata = call.data.split('/')
-    print(strcalldata[0],strcalldata[1],"ss") 
+    print(strcalldata[0],strcalldata[1],"ss")
     if strcalldata[0] == 'NAZ':
         print(strcalldata[1])
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-6)
-        await call.message.edit_text("Pokemon list", reply_markup = markup) 
-        
-         
+        await call.message.edit_text("Pokemon list", reply_markup = markup)
+
+
     elif strcalldata[0] == 'VPERED':
         print(strcalldata[1])
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])+6)
         await call.message.edit_text("Pokemon list", reply_markup = markup)
-        
-        
+
+
     elif strcalldata[0] == 'CANS':
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1]))
         print("cans nashat markup est'")
         await call.message.reply("Pokemon list",reply_markup = markup)
-        
-         
+
+
     elif strcalldata[0] == 'PRED':
         Pok = PokemonModel.Pokemon(int(strcalldata[1])-1,DB)
         strng = Pok.ToString()
@@ -79,8 +79,8 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         await bot.send_photo(chat_id = call.from_user.id, \
         photo = types.InputFile(image)\
         , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
-        
-        
+
+
     elif strcalldata[0] == 'NEXT':
         Pok = PokemonModel.Pokemon(int(strcalldata[1])+1,DB)
         strng = Pok.ToString()
@@ -90,8 +90,8 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         await bot.send_photo(chat_id = call.from_user.id, \
         photo = types.InputFile(image)\
         , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
-        
-        
+
+
     elif strcalldata[0] == 'ID':
         Pok = PokemonModel.Pokemon(int(strcalldata[1]),DB)
         strng = Pok.ToString()
@@ -101,7 +101,7 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         await bot.send_photo(chat_id = call.from_user.id, \
         photo = types.InputFile(image)\
         , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
-        
+
 
 if __name__ == "__main__":
     executor.start_polling(dp)
