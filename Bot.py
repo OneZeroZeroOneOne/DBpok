@@ -1,4 +1,3 @@
-token = "858185563:AAEIh49GYHAEGb_1PK4K2VQuFftBto5zEpU"
 import sqlite3
 import settings
 import ButtonUpDown
@@ -20,7 +19,7 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 DB = DBworker.DB()
 
-bot = Bot(token=token)
+bot = Bot(token=settings.bot_token)
 dp = Dispatcher(bot, storage=MemoryStorage())
 dp.middleware.setup(LoggingMiddleware())
 
@@ -39,10 +38,11 @@ async def process_pokemon_command(message: types.Message):
 
 @dp.message_handler(commands=['pokemons'])
 async def process_pokemons_command(message: types.Message):
-    argument = message.get_args()
+    argument = message.get_args()[0]
     print(argument)
     if argument.isdigit():
-        markup = ButtonUpDown.ButtnUPDOWN(int(argument))
+        #markup = ButtonUpDown.ButtnUPDOWN(int(argument))
+        markup = ButtonUpDown.CreatePaginationMarkup(int(argument), DB)
         await message.reply("Pokemon list",reply_markup = markup)
 
 
@@ -54,18 +54,20 @@ async def query_InPok_proceed(call: types.CallbackQuery):
     print(strcalldata[0],strcalldata[1],"ss")
     if strcalldata[0] == 'NAZ':
         print(strcalldata[1])
-        markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-6)
+        #markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-6)
+        markup = ButtonUpDown.CreatePaginationMarkup(int(strcalldata[1]), DB)
         await call.message.edit_text("Pokemon list", reply_markup = markup)
 
 
     elif strcalldata[0] == 'VPERED':
         print(strcalldata[1])
-        markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])+6)
+        #markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])+6)
+        markup = ButtonUpDown.CreatePaginationMarkup(int(strcalldata[1]), DB)
         await call.message.edit_text("Pokemon list", reply_markup = markup)
 
 
     elif strcalldata[0] == 'CANS':
-        
+
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1]))
         print("cans nashat markup est'")
         await call.message.reply("Pokemon list",reply_markup = markup)
@@ -77,9 +79,8 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         image = Pok.Image
         markup = ButtonUpDown.CansBut(int(strcalldata[1])-1)
         print(strng)
-        await bot.send_photo(chat_id = call.from_user.id, \
-        photo = types.InputFile(image)\
-        , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
+        await bot.send_photo(chat_id = call.from_user.id, photo = types.InputFile(image),
+        caption = strng, parse_mode = 'Markdown',reply_markup = markup)
 
 
     elif strcalldata[0] == 'NEXT':
@@ -88,21 +89,19 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         image = Pok.Image
         markup = ButtonUpDown.CansBut(int(strcalldata[1]+7)+1)
         print(strng)
-        await bot.send_photo(chat_id = call.from_user.id, \
-        photo = types.InputFile(image)\
-        , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
+        await bot.send_photo(chat_id = call.from_user.id, photo = types.InputFile(image),
+        caption = strng, parse_mode = 'Markdown',reply_markup = markup)
 
 
     elif strcalldata[0] == 'ID':
         print(strcalldata[1])
-        Pok = PokemonModel.Pokemon(int(strcalldata[1])+6,DB)
+        Pok = PokemonModel.Pokemon(int(strcalldata[1]),DB)
         strng = Pok.ToString()
         image = Pok.Image
         print(strng)
         markup = ButtonUpDown.CansBut(int(strcalldata[1]))
-        await bot.send_photo(chat_id = call.from_user.id, \
-        photo = types.InputFile(image)\
-        , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
+        await bot.send_photo(chat_id = call.from_user.id, photo = types.InputFile(image),
+        caption = strng, parse_mode = 'Markdown',reply_markup = markup)
 
 
 if __name__ == "__main__":

@@ -49,7 +49,7 @@ class Pokemon(Model):
         self.GetEvolutions()
 
     def GetImage(self):
-        self.Image = "pokemons_img/{}#{}.jpg".format(self.PokemonID, self.Name.replace("`", "").lower())
+        self.Image = "new_pokemons_img/{}#{}.jpg".format(self.ID, self.PokemonID)
         #print(self.Image)
 
     def validate(self):

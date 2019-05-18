@@ -29,14 +29,26 @@ class DB:
         data = self.cursor.fetchone()
         return [data['EvolutionFrom'], data['EvolutionInto']]
 
+
     def Sample(IdP,step):
+        """
+            GAVNO EBANOE
+            NADO PEREDELAT'
+        """
         conn = sqlite3.connect("{}".format(settings.poke_db))
         cursor = conn.cursor()
         sample = cursor.execute("SELECT * FROM PokemonDB WHERE PokemonID = {}".format(str(int(IdP)+step)))
         sample = cursor.fetchone()
         return sample
 
+    def get_pokemon_list(self, pok_id, how_many):
+        sql_command = "SELECT * FROM PokemonDB WHERE ID >= {} LIMIT {}".format(pok_id, how_many)
+        self.cursor.execute(sql_command)
+
+        data = self.cursor.fetchall()
+        return data
+
 
 #HOW TO USE IT!
 #db = DB()
-#print(db.get_pokemon_by_dbid(4))
+#print(db.get_pokemon_list(4, 6))
