@@ -65,6 +65,7 @@ async def query_InPok_proceed(call: types.CallbackQuery):
 
 
     elif strcalldata[0] == 'CANS':
+        
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1]))
         print("cans nashat markup est'")
         await call.message.reply("Pokemon list",reply_markup = markup)
@@ -85,7 +86,7 @@ async def query_InPok_proceed(call: types.CallbackQuery):
         Pok = PokemonModel.Pokemon(int(strcalldata[1])+1,DB)
         strng = Pok.ToString()
         image = Pok.Image
-        markup = ButtonUpDown.CansBut(int(strcalldata[1])+1)
+        markup = ButtonUpDown.CansBut(int(strcalldata[1]+7)+1)
         print(strng)
         await bot.send_photo(chat_id = call.from_user.id, \
         photo = types.InputFile(image)\
@@ -93,7 +94,8 @@ async def query_InPok_proceed(call: types.CallbackQuery):
 
 
     elif strcalldata[0] == 'ID':
-        Pok = PokemonModel.Pokemon(int(strcalldata[1]),DB)
+        print(strcalldata[1])
+        Pok = PokemonModel.Pokemon(int(strcalldata[1])+6,DB)
         strng = Pok.ToString()
         image = Pok.Image
         print(strng)
