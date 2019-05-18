@@ -46,21 +46,25 @@ async def process_pokemons_command(message: types.Message):
 async def query_InPok_proceed(call: types.CallbackQuery):
     strcalldata = call.data.split('/')
     argument = strcalldata[1]
-    print(strcalldata[0],strcalldata[1],"ssssssssssssssss") 
+    print(strcalldata[0],strcalldata[1],"ss") 
     if strcalldata[0] == 'NAZ':
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-11)
-        await call.message.edit_text("Pokemon list", reply_markup = markup)   
+        await call.message.edit_text("Pokemon list", reply_markup = markup)  
+    elif strcalldata[0] == 'CANS':
+        markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])-6)
+        await call.message.edit_text("Pokemon list", reply_markup = markup) 
     elif strcalldata[0] == 'NEXT':
         markup = ButtonUpDown.ButtnUPDOWN(int(strcalldata[1])+6)
         await call.message.edit_text("Pokemon list", reply_markup = markup)
-    else:
+    elif strcalldata[0] == 'ID':
+        markup = ButtonUpDown.CansBut(int(strcalldata[1]))
         strng = "*Имя покемона:* {}\n*В общем:* {}\n*Атака:* {}\n*HP:* {}\n*Защита:* {}\n*Тип1:* {}\n*Тип2:* {}\n*Ск.Атк:* {}\n"\
         "*Cк.Защ:* {}\n*Скорость:* {}\n*Поколение:* {}\n*Легендарность:* {}\n*ID:* {}".format(DBworker.DB.Sample(argument,0)[2],DBworker.DB.Sample(argument,0)[5],DBworker.DB.Sample(argument,0)[7],DBworker.DB.Sample(argument,0)[6],\
         DBworker.DB.Sample(argument,0)[8],DBworker.DB.Sample(argument,0)[3],DBworker.DB.Sample(argument,0)[4],DBworker.DB.Sample(argument,0)[9],DBworker.DB.Sample(argument,0)[10],DBworker.DB.Sample(argument,0)[11],DBworker.DB.Sample(argument,0)[12],DBworker.DB.Sample(argument,0)[13],DBworker.DB.Sample(argument,0)[1])
         print(strng)
         await bot.send_photo(chat_id = call.from_user.id, \
         photo = types.InputFile("pokemons_img\{}#{}.jpg".format(DBworker.DB.Sample(argument,0)[1],DBworker.DB.Sample(argument,0)[2].lower()))\
-        , caption = strng, parse_mode = 'Markdown')
+        , caption = strng, parse_mode = 'Markdown',reply_markup = markup)
         
 
 if __name__ == "__main__":

@@ -16,10 +16,16 @@ def ButtnUPDOWN(IdPokemon):
     inline_Nazad = InlineKeyboardButton("Назад", callback_data='NAZ/'+str(DBworker.DB.Sample(IdPokemon,i)[1]))
     inline_Vpered = InlineKeyboardButton("Вперед", callback_data='NEXT/'+str(DBworker.DB.Sample(IdPokemon,i)[1]))
     markup.add(inline_Nazad,inline_Vpered)
+    
     return markup
     
-
-
+def CansBut(IdPokemon):
+    markup = InlineKeyboardMarkup()
+    inline_Сans = InlineKeyboardButton("Отмена", callback_data='CANS/'+str(DBworker.DB.Sample(IdPokemon,0)[1]))  
+    markup.add(inline_Сans)
+    return markup
+    
+    
+    
 if __name__ == '__main__':
     k = ButtnUPDOWN(1)
-    
