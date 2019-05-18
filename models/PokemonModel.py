@@ -7,8 +7,8 @@ pokemon_description = """*Имя покемона:* {}
 *Атака:* {}
 *HP:* {}
 *Защита:* {}
-*Тип1:* {}
-*Тип2:* {}
+*Тип 1:* {}
+*Тип 2:* {}
 *Ск.Атк:* {}
 *Cк.Защ:* {}
 *Скорость:* {}
@@ -74,7 +74,7 @@ class Pokemon(Model):
         return None
 
     def ToString(self):
-        return pokemon_description.format(self.Name, '123', self.Attack,
+        return pokemon_description.format(self.Name, self.Totl, self.Attack,
         self.HP, self.Defense, self.TP,
         self.TPP, self.SpAtk, self.SpDef,
         self.Speed,
