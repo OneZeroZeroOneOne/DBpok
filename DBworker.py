@@ -3,7 +3,7 @@ import settings
 
 def dict_factory(cursor, row):
     d = {}
-    for idx,col in enumerate(cursor.description):
+    for idx, col in enumerate(cursor.description):
         d[col[0]] = row[idx]
     return d
 
@@ -19,7 +19,7 @@ class DB:
 
         data = self.cursor.fetchone()
         data['Legendary'] = False if data['Legendary'][0] == 'F' else True
-        
+
         return data
 
     def get_evolutions_by_id(self, pok_id):
@@ -28,7 +28,7 @@ class DB:
 
         data = self.cursor.fetchone()
         return [data['EvolutionFrom'], data['EvolutionInto']]
-        
+
     def Sample(IdP,step):
         conn = sqlite3.connect("{}".format(settings.poke_db))
         cursor = conn.cursor()
