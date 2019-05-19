@@ -28,13 +28,7 @@ async def process_pokemon_command(message: types.Message):
     argument = message.get_args()
     print(argument)
     if argument.isdigit():
-        Pok = PokemonModel.Pokemon(int(argument),DB)
-        strng = Pok.ToString()
-        image = Pok.Image
-        print(strng)
-        await bot.send_photo(chat_id = message.chat.id, \
-        photo = types.InputFile(image)\
-        , caption = strng, parse_mode = 'Markdown')
+        pok = PokemonFetch().get_pokemon_id(argument);
 
 @dp.message_handler(commands=['pokemons'])
 async def process_pokemons_command(message: types.Message):
